@@ -171,7 +171,7 @@ const Index = () => {
                                         {item.name}
                                     </Typography>
                                     <Typography color="textSecondary">
-                                        持仓金额：￥{renderNum(item)}
+                                        持仓金额：￥{renderNum(item)} ({(Number(renderNum(item))/renderTotal*100).toFixed(2)}%)
                                     </Typography>
                                     <Typography color="textSecondary">
                                         净值估算：<Typography variant={"body2"} component={"span"}
