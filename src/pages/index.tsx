@@ -23,15 +23,22 @@ const Index = () => {
     const timer = useRef<any>(null)
     const [loading, setLoading] = useState(true)
     const fetch = useCallback(() => {
-        axios.post<Leek.Unit[]>('/api/leek', {
-            code: Object.keys(list).join()
-        }).then(res => {
-            setData(res.data)
+        let index = 0;
+        let offset = 5;
+        const codes = Object.keys(list);
+        const chunks  = Math.ceil(codes.length/offset)
+        const codeChunk = [];
+        while (index<chunks){
+            codeChunk.push(codes.slice(index*offset,(index+1)*offset));
+            ++index;
+        }
+        axios.all(codeChunk.map(item=>axios.post<Leek.Unit[]>('/api/leek',{
+            code:item.join()
+        }))).then(res=>{
+            const data = res.map(item=>item.data).flat();
+            setData(data);
             setLoading(false)
-        }).catch(e => {
-            // fetch()
-
-        })
+        }).catch(()=>{})
     }, [list])
     useEffect(() => {
         try {
